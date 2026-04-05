@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>GET2IT Mobile Prototype</title>
+  <style>
+    :root {
+      --bg: #0e0f1a;
+      --panel: #181a2b;
+      --panel-2: #222541;
+      --ink: #f8f8fb;
+      --muted: #a8add0;
+      --lime: #b6ff4d;
+      --cyan: #4de8ff;
+      --pink: #ff4dc4;
+      --orange: #ff9a3c;
+      --line: rgba(255,255,255,.08);
+      --shadow: 0 18px 40px rgba(0,0,0,.28);
+      --radius: 22px;
+      --navy: #1e2a67;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #222754 0%, #121426 44%, #0b0c14 100%);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Arial, sans-serif;
+    }
+    body { min-height: 100vh; }
+
+    #introScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(22,217,255,.18), transparent 30%),
+        radial-gradient(circle at 80% 15%, rgba(255,47,167,.16), transparent 28%),
+        linear-gradient(135deg, #16224a 0%, #1b2452 35%, #241a59 100%);
+      transition: opacity .45s ease, visibility .45s ease;
+    }
+
+    .intro-wrap {
+      width: min(92vw, 560px);
+      text-align: center;
+      padding: 24px;
+    }
+
+    .intro-logo {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto 18px;
+      animation: introFloat 4.5s ease-in-out infinite;
+      filter: drop-shadow(0 12px 26px rgba(0,0,0,.18));
+    }
+
+    .intro-title {
+      font-size: 18px;
+      color: #eef2ff;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .intro-copy {
+      font-size: 14px;
+      color: rgba(255,255,255,.82);
+      line-height: 1.45;
+      max-width: 420px;
+      margin: 0 auto 20px;
+    }
+
+    .intro-btn {
+      border: 0;
+      border-radius: 18px;
+      padding: 14px 22px;
+      background: linear-gradient(135deg,#b6ff4d,#e4ffae);
+      color: #111523;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(0,0,0,.18);
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 85% 8%, rgba(255,77,196,.14), transparent 20%),
+        radial-gradient(circle at 8% 16%, rgba(77,232,255,.16), transparent 18%),
+        radial-gradient(circle at 50% 100%, rgba(182,255,77,.08), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
+      padding: 18px 16px 100px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-top: 6px;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.72);
+      border-radius: 22px;
+      padding: 10px 14px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.16);
+    }
+
+    .brand-logo {
+      width: min(310px, 86vw);
+      height: auto;
+      display: block;
+      margin: 0;
+      transform-origin: center;
+      animation: logoFloat 4.2s ease-in-out infinite, logoGlow 3.2s ease-in-out infinite;
+      transition: transform .22s ease, filter .22s ease;
+      will-change: transform, filter;
+    }
+
+    .brand-logo:hover {
+      transform: scale(1.03) translateY(-1px);
+      filter: drop-shadow(0 10px 22px rgba(255,255,255,.10)) drop-shadow(0 0 18px rgba(255,77,196,.18)) drop-shadow(0 0 20px rgba(77,232,255,.14));
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .hero {
+      position: relative;
+      border-radius: 28px;
+      padding: 18px;
+      background:
+        linear-gradient(135deg, rgba(255,77,196,.18), rgba(77,232,255,.14) 42%, rgba(182,255,77,.13)),
+        var(--panel);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.08);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .hero::after {
+      content: "XP";
+      position: absolute;
+      right: -8px;
+      top: -10px;
+      font-weight: 900;
+      font-size: 66px;
+      letter-spacing: -.08em;
+      color: rgba(255,255,255,.06);
+      transform: rotate(10deg);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: #fff;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 39px;
+      line-height: .96;
+      letter-spacing: -.055em;
+    }
+
+    .hero p {
+      margin: 0 0 16px;
+      color: #e8ebff;
+      font-size: 15px;
+      line-height: 1.5;
+      max-width: 100%;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      background: rgba(8,10,19,.34);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .stat .value {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 4px 10px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -.03em;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 12px;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      white-space: nowrap;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 11px 14px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, var(--lime), #ddff9c);
+      color: #111525;
+      border-color: transparent;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 15px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+      backdrop-filter: blur(8px);
+    }
+
+    .mission {
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      background: linear-gradient(135deg, rgba(77,232,255,.2), rgba(255,77,196,.2));
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .mission h3, .zone h3, .simple-item h3 {
+      margin: 0 0 3px;
+      font-size: 15px;
+      letter-spacing: -.02em;
+    }
+
+    .mission p, .zone p, .simple-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .xp {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(182,255,77,.12);
+      border: 1px solid rgba(182,255,77,.22);
+      color: var(--lime);
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      border: 0;
+      border-radius: 16px;
+      padding: 13px 14px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--lime), #e4ffae);
+      color: #111523;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,.05);
+      color: white;
+      border: 1px solid var(--line);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .zone {
+      min-height: 146px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .zone::before {
+      content: "";
+      position: absolute;
+      inset: auto -20px -26px auto;
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.05);
+    }
+
+    .zone .mini {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+    }
+
+    .ring-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .ring {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: conic-gradient(var(--lime) 0 68%, rgba(255,255,255,.08) 68% 100%);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+
+    .ring::after {
+      content: attr(data-value);
+      width: 60px;
+      height: 60px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #121522;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .coach {
+      position: fixed;
+      bottom: 86px;
+      right: calc(50% - 215px + 18px);
+      width: min(84vw, 320px);
+      background: linear-gradient(135deg, rgba(255,77,196,.22), rgba(77,232,255,.18)), var(--panel-2);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 22px;
+      padding: 14px 14px 14px 54px;
+      box-shadow: var(--shadow);
+      display: none;
+      z-index: 20;
+    }
+
+    .coach.show { display: block; }
+
+    .coach .orb {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--lime), var(--cyan));
+      box-shadow: 0 0 0 8px rgba(182,255,77,.08);
+    }
+
+    .coach h4 { margin: 0 0 4px; font-size: 14px; }
+    .coach p { margin: 0; color: #edf0ff; font-size: 12px; line-height: 1.35; }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(100%, 430px);
+      background: rgba(10,12,21,.88);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 10px 12px 18px;
+      z-index: 15;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .nav-btn strong {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.04);
+      font-size: 18px;
+      font-weight: 400;
+    }
+
+    .nav-btn.active { color: white; }
+    .nav-btn.active strong { background: linear-gradient(135deg, var(--pink), var(--cyan)); }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,7,14,.52);
+      backdrop-filter: blur(6px);
+      display: none;
+      z-index: 30;
+      padding: 24px 16px;
+    }
+
+    .overlay.show { display: block; }
+
+    .sheet {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 18px;
+      background: #151829;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      max-width: 398px;
+      margin: 0 auto;
+    }
+
+    .sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .sheet-head h3 { margin: 0; font-size: 19px; }
+
+    .sheet-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .simple-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .simple-item {
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 13px;
+      cursor: pointer;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      bottom: 100px;
+      background: linear-gradient(135deg, var(--lime), #ecffbe);
+      color: #111523;
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+      z-index: 40;
+      transition: .28s ease;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-2px) scale(1.01); }
+    }
+
+    @keyframes logoGlow {
+      0%, 100% {
+        filter: drop-shadow(0 8px 18px rgba(0,0,0,.18)) drop-shadow(0 0 0 rgba(255,77,196,0)) drop-shadow(0 0 0 rgba(77,232,255,0));
+      }
+      50% {
+        filter: drop-shadow(0 10px 22px rgba(0,0,0,.20)) drop-shadow(0 0 10px rgba(255,77,196,.12)) drop-shadow(0 0 12px rgba(77,232,255,.10));
+      }
+    }
+
+    @keyframes introFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-4px) scale(1.01); }
+    }
+
+    @media (max-width: 380px) {
+      .hero h1 { font-size: 31px; }
+      .stats { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .coach { right: 12px; width: calc(100% - 24px); }
+      .chip { display: none; }
+      .brand-logo { width: min(280px, 84vw); }
+    }
+  </style>
+</head>
+<body>
+  <div id="introScreen">
+    <div class="intro-wrap">
+      <svg class="intro-logo" viewBox="0 0 560 220" role="img" aria-label="GET2IT logo" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="introRibbonGradFixed" x1="12%" y1="82%" x2="86%" y2="18%">
+            <stop offset="0%" stop-color="#1fcfff"/>
+            <stop offset="18%" stop-color="#27c4ff"/>
+            <stop offset="38%" stop-color="#ff2fa7"/>
+            <stop offset="58%" stop-color="#ff8f1f"/>
+            <stop offset="78%" stop-color="#ffe100"/>
+            <stop offset="100%" stop-color="#55d7b6"/>
+          </linearGradient>
+          <filter id="introLogoShadowFixed" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.18"/>
+          </filter>
+        </defs>
+        <text x="40" y="126" font-size="70" fill="#ffffff" style="font-family: Inter, Arial, sans-serif; font-weight: 800; letter-spacing: -0.05em;">GET</text>
+        <text x="400" y="148" font-size="66" fill="#ffffff" style="font-family: Inter, Arial, sans-serif; font-weight: 800; letter-spacing: -0.05em;">IT</text>
+        <text x="280" y="185" text-anchor="middle"
+              font-size="200"
+              font-family="Inter, Arial, sans-serif"
+              font-weight="900"
+              fill="url(#introRibbonGradFixed)"
+              filter="url(#introLogoShadowFixed)">2</text>
+      </svg>
+      <div class="intro-title">Level up your life.</div>
+      <div class="intro-copy">Quick wins. Less chaos. Everything important in one place.</div>
+      <button class="intro-btn" onclick="enterApp()">Enter GET2IT</button>
+    </div>
+  </div>
+
+  <div class="phone">
+    <div class="topbar">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 560 220" role="img" aria-label="GET2IT logo" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="brandRibbonGradFixed" x1="12%" y1="82%" x2="86%" y2="18%">
+              <stop offset="0%" stop-color="#1fcfff"/>
+              <stop offset="18%" stop-color="#27c4ff"/>
+              <stop offset="38%" stop-color="#ff2fa7"/>
+              <stop offset="58%" stop-color="#ff8f1f"/>
+              <stop offset="78%" stop-color="#ffe100"/>
+              <stop offset="100%" stop-color="#55d7b6"/>
+            </linearGradient>
+            <filter id="brandLogoShadowFixed" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000000" flood-opacity="0.12"/>
+            </filter>
+          </defs>
+          <text x="40" y="126" font-size="70" fill="#1e2a67" style="font-family: Inter, Arial, sans-serif; font-weight: 800; letter-spacing: -0.05em;">GET</text>
+          <text x="280" y="185" text-anchor="middle" font-size="200" font-family="Inter, Arial, sans-serif" font-weight="900" fill="url(#brandRibbonGradFixed)" filter="url(#brandLogoShadowFixed)">2</text>
+          <text x="400" y="148" font-size="66" fill="#1e2a67" style="font-family: Inter, Arial, sans-serif; font-weight: 800; letter-spacing: -0.05em;">IT</text>
+        </svg>
+      </div>
+      <div class="chip">LVL 12</div>
+    </div>
+
+    <section class="hero">
+      <div class="eyebrow">🔥 6 day streak · You’re ahead</div>
+      <h1>Level up<br>your life.</h1>
+      <p>Quick wins. Less chaos. Everything important in one place, without it feeling like hard work.</p>
+      <div class="stats">
+        <div class="stat">
+          <div class="label">Progress</div>
+          <div class="value" id="progressValue">68%</div>
+        </div>
+        <div class="stat">
+          <div class="label">XP Today</div>
+          <div class="value">+430</div>
+        </div>
+        <div class="stat">
+          <div class="label">Missions</div>
+          <div class="value">3 live</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="tabs">
+      <button class="tab active" data-screen="missions">Active Missions</button>
+      <button class="tab" data-screen="zones">Life Zones</button>
+      <button class="tab" data-screen="simple">Keep It Simple</button>
+    </div>
+
+    <section id="missions" class="screen active">
+      <div class="section-title">
+        <h2>Quick wins</h2>
+        <span>Tap and demo</span>
+      </div>
+
+      <div class="card">
+        <div class="mission">
+          <div class="icon">🚗</div>
+          <div>
+            <h3>MOT due in 12 days</h3>
+            <p>Add the renewal date now and stay ahead of it.</p>
+          </div>
+          <div class="xp">+250 XP</div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="showToast('+250 XP earned'); boostProgress(4);">Complete</button>
+          <button class="btn btn-secondary" onclick="openSheet('mot')">View</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="mission">
+          <div class="icon">📄</div>
+          <div>
+            <h3>Add one key document</h3>
+            <p>Keep home, travel or money details where you can find them.</p>
+          </div>
+          <div class="xp">+180 XP</div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="showToast('+180 XP earned'); boostProgress(3);">Upload</button>
+          <button class="btn btn-secondary" onclick="openSheet('docs')">Why this helps</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="mission">
+          <div class="icon">💳</div>
+          <div>
+            <h3>Spot a dead subscription</h3>
+            <p>See what you still pay for and cut what you do not use.</p>
+          </div>
+          <div class="xp">+120 XP</div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="showToast('Saved mission complete'); boostProgress(2);">Check</button>
+          <button class="btn btn-secondary" onclick="openSheet('subs')">Preview</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="zones" class="screen">
+      <div class="section-title">
+        <h2>Life Zones</h2>
+        <span>Cleaner view</span>
+      </div>
+
+      <div class="card">
+        <div class="ring-wrap">
+          <div class="ring" id="ring" data-value="68%"></div>
+          <div>
+            <h3 style="margin:0 0 6px; font-size:17px;">Overall life score</h3>
+            <p style="margin:0; color:var(--muted); font-size:13px; line-height:1.4;">The product still has the same core functionality, but this view keeps it lighter and easier to understand.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card zone" onclick="openSheet('home')">
+          <div class="icon">🏡</div>
+          <h3>Home Base</h3>
+          <p>Property, bills, keys, repairs and where things live.</p>
+          <span class="mini">74% done</span>
+        </div>
+        <div class="card zone" onclick="openSheet('money')">
+          <div class="icon">💸</div>
+          <h3>Money Mode</h3>
+          <p>Accounts, payments, reminders and who needs access.</p>
+          <span class="mini">61% done</span>
+        </div>
+        <div class="card zone" onclick="openSheet('people')">
+          <div class="icon">❤️</div>
+          <h3>People</h3>
+          <p>Shared access, family contacts and key support roles.</p>
+          <span class="mini">48% done</span>
+        </div>
+        <div class="card zone" onclick="openSheet('digital')">
+          <div class="icon">📱</div>
+          <h3>Digital Life</h3>
+          <p>Subscriptions, platforms, logins and online services.</p>
+          <span class="mini">53% done</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="simple" class="screen">
+      <div class="section-title">
+        <h2>Simpler feature view</h2>
+        <span>Less clutter</span>
+      </div>
+
+      <div class="card">
+        <h3 style="margin:0 0 8px; font-size:17px;">What GET2IT does</h3>
+        <p style="margin:0; color:var(--muted); font-size:13px; line-height:1.45;">This version strips the detail back so each feature feels easier to scan on a phone, while the deeper structure still sits underneath.</p>
+      </div>
+
+      <div class="simple-list">
+        <div class="simple-item" onclick="openSheet('essentials')">
+          <h3>Essentials</h3>
+          <p>Your core details, ready fast.</p>
+        </div>
+        <div class="simple-item" onclick="openSheet('shared')">
+          <h3>Shared Access</h3>
+          <p>Choose who can see what, when needed.</p>
+        </div>
+        <div class="simple-item" onclick="openSheet('reminders')">
+          <h3>Smart Reminders</h3>
+          <p>Renewals, dates, payments and prompts.</p>
+        </div>
+        <div class="simple-item" onclick="openSheet('backup')">
+          <h3>Backup Plan</h3>
+          <p>Clear fallback if life changes suddenly.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="coach" id="coach">
+    <div class="orb"></div>
+    <button type="button" onclick="hideCoach()" style="position:absolute; top:10px; right:10px; width:30px; height:30px; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06); color:white; font-size:18px; line-height:1; cursor:pointer;">×</button>
+    <h4>Your Sidekick says:</h4>
+    <p>You’re close to the next level. One more mission and your score jumps again.</p>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="closeSheet(event)">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-head">
+        <h3 id="sheetTitle">Title</h3>
+        <button class="sheet-close" onclick="closeSheet()">×</button>
+      </div>
+      <p id="sheetText" style="margin:0; color:var(--muted); font-size:14px; line-height:1.5;"></p>
+      <div class="actions" style="margin-top:16px;">
+        <button class="btn btn-primary" onclick="showToast('Demo action complete'); closeSheet();">Try action</button>
+        <button class="btn btn-secondary" onclick="closeSheet()">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">+250 XP earned</div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-screen="missions"><strong>🎯</strong>Play</button>
+    <button class="nav-btn" data-screen="zones"><strong>🧩</strong>Zones</button>
+    <button class="nav-btn" data-screen="simple"><strong>✨</strong>Simple</button>
+    <button class="nav-btn" onclick="toggleCoach()"><strong>🤖</strong>Sidekick</button>
+  </nav>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const screens = document.querySelectorAll('.screen');
+    const navBtns = document.querySelectorAll('.nav-btn[data-screen]');
+    const coach = document.getElementById('coach');
+    const toast = document.getElementById('toast');
+    const ring = document.getElementById('ring');
+    const progressValue = document.getElementById('progressValue');
+    let progress = 68;
+
+    const sheetContent = {
+      mot: {
+        title: 'MOT mission',
+        text: 'Simple example of a gaming-style task. Underneath it, the product is still handling reminders, renewal timing and important records.'
+      },
+      docs: {
+        title: 'One document, big win',
+        text: 'This keeps the experience lighter. Rather than showing a complex filing system up front, the app guides the user to small, useful actions.'
+      },
+      subs: {
+        title: 'Subscription check',
+        text: 'A younger audience responds better to quick savings, clean-up and control. This feature can flag recurring spend and show where to act.'
+      },
+      home: {
+        title: 'Home Base',
+        text: 'Repairs, bills, utility info, appliance details, insurance and where key documents sit — all made easier to scan on a phone.'
+      },
+      money: {
+        title: 'Money Mode',
+        text: 'Payments, shared responsibilities, reminders and key account references presented as simpler, more approachable tiles.'
+      },
+      people: {
+        title: 'People',
+        text: 'Trusted contacts, family roles and permissions. The same serious structure is there, but this view makes it feel easier and less formal.'
+      },
+      digital: {
+        title: 'Digital Life',
+        text: 'Subscriptions, memberships, streaming, mobile accounts and online services brought together in a clearer, more current format.'
+      },
+      essentials: {
+        title: 'Essentials',
+        text: 'A stripped-back first layer for users who want to get set up quickly without seeing too many categories at once.'
+      },
+      shared: {
+        title: 'Shared Access',
+        text: 'This is where the product becomes genuinely useful. Users can decide what is private, what is shared and what becomes available if needed.'
+      },
+      reminders: {
+        title: 'Smart Reminders',
+        text: 'Dates and deadlines should feel helpful, not nagging. This view keeps them current, clean and easy to act on.'
+      },
+      backup: {
+        title: 'Backup Plan',
+        text: 'A calm fallback layer. If life changes suddenly, the important things are clearer, easier to find and easier to hand over.'
+      }
+    };
+
+    function setScreen(name) {
+      screens.forEach(screen => screen.classList.toggle('active', screen.id === name));
+      tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.screen === name));
+      navBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.screen === name));
+    }
+
+    tabs.forEach(tab => tab.addEventListener('click', () => setScreen(tab.dataset.screen)));
+    navBtns.forEach(btn => btn.addEventListener('click', () => setScreen(btn.dataset.screen)));
+
+    function openSheet(key) {
+      const data = sheetContent[key];
+      document.getElementById('sheetTitle').textContent = data.title;
+      document.getElementById('sheetText').textContent = data.text;
+      document.getElementById('overlay').classList.add('show');
+    }
+
+    function closeSheet(event) {
+      if (!event || event.target.id === 'overlay') {
+        document.getElementById('overlay').classList.remove('show');
+      }
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1700);
+    }
+
+    function boostProgress(amount) {
+      progress = Math.min(96, progress + amount);
+      const label = progress + '%';
+      ring.style.background = `conic-gradient(var(--lime) 0 ${progress}%, rgba(255,255,255,.08) ${progress}% 100%)`;
+      ring.setAttribute('data-value', label);
+      progressValue.textContent = label;
+      ring.style.transform = 'scale(1.03)';
+      setTimeout(() => { ring.style.transform = 'scale(1)'; }, 180);
+    }
+
+    function toggleCoach() {
+      coach.classList.toggle('show');
+    }
+
+    function hideCoach() {
+      coach.classList.remove('show');
+    }
+
+    function enterApp() {
+      const intro = document.getElementById('introScreen');
+      if (!intro) return;
+      intro.style.opacity = '0';
+      intro.style.visibility = 'hidden';
+    }
+  </script>
+</body>
+</html>
