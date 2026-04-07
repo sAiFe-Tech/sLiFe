@@ -202,7 +202,6 @@
   .zone-card::after { right:-20px; bottom:-22px; top:auto; }
   .mini-pill { display:inline-block; margin-top:10px; padding:6px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted-2); font-size:11px; position:relative; z-index:1; font-family:"IBM Plex Mono","Courier New",monospace; }
   .zone-card .mini-actions { display:flex; gap:8px; margin-top:12px; position:relative; z-index:1; }
-  .zone-status-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; position:relative; z-index:1; }
   .zone-card .mini-actions button { flex:1; border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; padding:10px 12px; border-radius:14px; font-size:12px; font-weight:700; cursor:pointer; }
   .zone-card.featured { background:linear-gradient(135deg, rgba(255,47,167,.14), rgba(0,212,255,.12)), rgba(255,255,255,.08); border-color:rgba(255,255,255,.18); box-shadow:0 0 0 1px rgba(255,255,255,.05) inset, 0 0 30px rgba(255,47,167,.08), var(--shadow-soft); }
 
@@ -241,6 +240,76 @@
   .preview-top { display:flex; justify-content:space-between; gap:8px; align-items:center; margin-bottom:6px; }
   .preview-top strong { font-size:13px; }
   .preview-card p { margin:0; font-size:12px; color:var(--muted); line-height:1.35; }
+  .counterpart-wrap { display:grid; gap:12px; margin-top:12px; }
+  .counterpart-note { font-size:12px; color:var(--muted-2); line-height:1.45; }
+  .mysaife-phone {
+    border-radius:28px;
+    padding:12px;
+    background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
+    border:1px solid rgba(255,255,255,.18);
+    box-shadow:0 22px 42px rgba(0,0,0,.28);
+  }
+  .mysaife-screen {
+    border-radius:22px;
+    padding:14px;
+    background:
+      radial-gradient(circle at 85% 14%, rgba(0,212,255,.16), transparent 24%),
+      radial-gradient(circle at 15% 90%, rgba(184,255,85,.12), transparent 24%),
+      linear-gradient(160deg, #f8f4ee, #efe7db 58%, #e7dccf);
+    color:#1f2c2a;
+    min-height:430px;
+  }
+  .mysaife-topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .mysaife-brand { display:flex; flex-direction:column; gap:3px; }
+  .mysaife-brand strong { font-family:"Barlow Condensed", Impact, sans-serif; font-size:22px; letter-spacing:.02em; color:#25443f; }
+  .mysaife-brand span, .mysaife-time { font-family:"IBM Plex Mono", monospace; font-size:11px; color:#5a6b68; }
+  .mysaife-panel, .mysaife-alert, .mysaife-summary {
+    border-radius:18px;
+    border:1px solid rgba(37,68,63,.10);
+    background:rgba(255,255,255,.68);
+    box-shadow:0 12px 24px rgba(31,44,42,.08);
+  }
+  .mysaife-panel { padding:14px; margin-bottom:12px; }
+  .mysaife-panel h4, .mysaife-alert h4, .mysaife-summary h4 {
+    margin:0 0 6px;
+    font-family:"Barlow Condensed", Impact, sans-serif;
+    font-size:24px;
+    letter-spacing:.02em;
+    color:#22413c;
+  }
+  .mysaife-panel p, .mysaife-alert p, .mysaife-summary p { margin:0; font-size:13px; line-height:1.45; color:#455754; }
+  .mysaife-alert {
+    padding:14px;
+    background:linear-gradient(135deg, rgba(71,242,154,.18), rgba(0,212,255,.10)), rgba(255,255,255,.72);
+  }
+  .mysaife-alert-top { display:flex; justify-content:space-between; gap:8px; align-items:center; margin-bottom:8px; }
+  .mysaife-badge {
+    border-radius:999px;
+    padding:6px 10px;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:10px;
+    color:#1d5a4e;
+    background:rgba(71,242,154,.18);
+    border:1px solid rgba(29,90,78,.14);
+    white-space:nowrap;
+  }
+  .mysaife-summary { padding:14px; margin-top:12px; }
+  .mysaife-list { display:grid; gap:8px; margin-top:10px; }
+  .mysaife-row {
+    display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+    border-top:1px solid rgba(37,68,63,.08); padding-top:8px;
+  }
+  .mysaife-row:first-child { border-top:0; padding-top:0; }
+  .mysaife-row strong { display:block; font-size:12px; color:#213c38; }
+  .mysaife-row span { font-size:11px; color:#5a6b68; }
+  .mysaife-pill {
+    border-radius:999px;
+    padding:5px 9px;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:10px;
+    color:#22413c;
+    background:rgba(37,68,63,.08);
+  }
 
   .hidden { display:none !important; }
 
@@ -396,31 +465,31 @@
     <div class="panel hidden" id="panel-zones">
       <div class="section-head"><h3>Life Zones</h3><span>Clearer structure</span></div>
       <div class="grid-2">
-        <div class="zone-card" id="zone-home">
+        <div class="zone-card">
           <div class="icon">🏡</div>
           <h4>Home Base</h4>
           <p>Property, bills, repairs and where things live.</p>
-          <span class="mini-pill" id="zone-home-pill">74% done</span>
+          <span class="mini-pill">74% done</span>
           <div class="mini-actions">
             <button onclick="openSheet('home')">Open checklist</button>
           </div>
         </div>
 
-        <div class="zone-card" id="zone-money">
+        <div class="zone-card">
           <div class="icon">💸</div>
           <h4>Money Mode</h4>
           <p>Accounts, payments, reminders and money basics.</p>
-          <span class="mini-pill" id="zone-money-pill">61% done</span>
+          <span class="mini-pill">61% done</span>
           <div class="mini-actions">
             <button onclick="openSheet('money')">Open checklist</button>
           </div>
         </div>
 
-        <div class="zone-card" id="zone-digital">
+        <div class="zone-card">
           <div class="icon">📱</div>
           <h4>Digital Life</h4>
           <p>Subscriptions, apps, passwords and online services.</p>
-          <span class="mini-pill" id="zone-digital-pill">53% done</span>
+          <span class="mini-pill">53% done</span>
           <div class="mini-actions">
             <button onclick="openSheet('digital')">Open checklist</button>
           </div>
@@ -430,10 +499,7 @@
           <div class="icon">🧑</div>
           <h4>People</h4>
           <p>Trusted contacts, shared access and your MySAiFe family link.</p>
-          <div class="zone-status-row">
-            <span class="mini-pill" id="zone-people-pill">46% done</span>
-            <span class="mini-pill" id="peopleZoneStatus">MySAiFe link locked</span>
-          </div>
+          <span class="mini-pill" id="peopleZoneStatus">Pending link</span>
           <div class="mini-actions">
             <button onclick="openSheet('invite')">Connect circle</button>
             <button onclick="openSheet('preview')">Preview share</button>
@@ -478,7 +544,6 @@ let streak = 6;
 let networkConnected = false;
 let onboardingSeen = false;
 const completed = { doc:false, contact:false, password:false };
-const zoneProgress = { home:74, money:61, digital:53, people:46 };
 
 const sheets = {
   onboarding: {
@@ -503,7 +568,7 @@ const sheets = {
       ['Status stays visible','Pending and connected states live in the People zone.']
     ],
     primary:'Send invite',
-    primaryAction:'connectFamily(); closeSheet();',
+    primaryAction:'connectFamilyCounterpart();',
     secondary:'Preview first',
     secondaryAction:"openSheet('preview');"
   },
@@ -528,8 +593,74 @@ const sheets = {
           </div>
         </div>
         <div class="sheet-actions">
-          <button class="btn btn-primary" onclick="connectFamily(); closeSheet();">Looks good</button>
+          <button class="btn btn-primary" onclick="connectFamilyCounterpart();">Looks good</button>
           <button class="btn btn-secondary" onclick="closeSheet();">Close</button>
+        </div>
+      </div>`
+  },
+  mysaife: {
+    custom:`
+      <div class="sheet-card">
+        <div class="eyebrow mono">MySAiFe counterpart</div>
+        <h3>The moment the other side receives it</h3>
+        <p>This closes the demo loop: GET2IT sends the invite, and MySAiFe acknowledges the family member joining the shared network.</p>
+        <div class="counterpart-wrap">
+          <div class="mysaife-phone">
+            <div class="mysaife-screen">
+              <div class="mysaife-topbar">
+                <div class="mysaife-brand">
+                  <strong>MySAiFe</strong>
+                  <span>family dashboard</span>
+                </div>
+                <div class="mysaife-time">linked just now</div>
+              </div>
+
+              <div class="mysaife-alert">
+                <div class="mysaife-alert-top">
+                  <h4>Family Network Updated</h4>
+                  <span class="mysaife-badge">NEW LINK</span>
+                </div>
+                <p><strong>Matthew via GET2IT</strong> has joined your family network. Shared essentials, emergency details and access rules are now available for review.</p>
+              </div>
+
+              <div class="mysaife-panel">
+                <h4>New connection</h4>
+                <p>Your younger family member joined through GET2IT. The system is now showing only the agreed essentials first, with a clear path to broaden access later.</p>
+              </div>
+
+              <div class="mysaife-summary">
+                <h4>What MySAiFe can now see</h4>
+                <div class="mysaife-list">
+                  <div class="mysaife-row">
+                    <div>
+                      <strong>Emergency contact shared</strong>
+                      <span>Visible immediately inside family overview</span>
+                    </div>
+                    <span class="mysaife-pill">Live</span>
+                  </div>
+                  <div class="mysaife-row">
+                    <div>
+                      <strong>Digital Life zone linked</strong>
+                      <span>Document status and password readiness passed through</span>
+                    </div>
+                    <span class="mysaife-pill">Synced</span>
+                  </div>
+                  <div class="mysaife-row">
+                    <div>
+                      <strong>Access rules confirmed</strong>
+                      <span>Private detail stays hidden until explicitly shared</span>
+                    </div>
+                    <span class="mysaife-pill">Protected</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="counterpart-note">For demo purposes this is a contained MySAiFe mockup inside the GET2IT prototype, so the investor can see the full two-sided narrative in one click.</p>
+        </div>
+        <div class="sheet-actions">
+          <button class="btn btn-primary" onclick="closeSheet();">Back to GET2IT</button>
+          <button class="btn btn-secondary" onclick="setPanel('zones'); highlightPeopleZone(); closeSheet();">Open People zone</button>
         </div>
       </div>`
   },
@@ -625,18 +756,6 @@ function setPanel(name) {
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.panel === name));
 }
 
-function updateZoneProgress() {
-  document.getElementById('zone-home-pill').textContent = `${zoneProgress.home}% done`;
-  document.getElementById('zone-money-pill').textContent = `${zoneProgress.money}% done`;
-  document.getElementById('zone-digital-pill').textContent = `${zoneProgress.digital}% done`;
-  document.getElementById('zone-people-pill').textContent = `${zoneProgress.people}% done`;
-}
-
-function applyZoneGain(zoneKey, gain) {
-  zoneProgress[zoneKey] = Math.min(100, zoneProgress[zoneKey] + gain);
-  updateZoneProgress();
-}
-
 function completeMission(key, xpGain, progressGain, message) {
   if (completed[key]) {
     showToast('Already completed');
@@ -674,20 +793,17 @@ function completeMission(key, xpGain, progressGain, message) {
     showToast(`+${xpGain} XP`);
   }
 
-  if (key === 'doc') {
-    applyZoneGain('digital', 12);
-  } else if (key === 'contact') {
-    applyZoneGain('people', 14);
-  } else if (key === 'password') {
-    applyZoneGain('digital', 18);
-  }
-
   if (Object.values(completed).every(Boolean)) {
     streak += 1;
     document.getElementById('streakText').textContent = `${streak} days`;
     document.getElementById('todayMessage').textContent = 'All missions complete — you are in control.';
     document.getElementById('focusMessage').textContent = 'All missions complete — you are in control.';
   }
+}
+
+function connectFamilyCounterpart() {
+  connectFamily();
+  openSheet('mysaife');
 }
 
 function connectFamily() {
@@ -698,7 +814,7 @@ function connectFamily() {
   networkConnected = true;
   document.getElementById('familyBanner').querySelector('p').textContent = 'Your circle is linked. Essentials, emergency details and access rules can now flow into the shared MySAiFe network.';
   document.getElementById('familyBanner').querySelector('.xp-chip').textContent = 'Connected';
-  document.getElementById('peopleZoneStatus').textContent = 'MySAiFe linked';
+  document.getElementById('peopleZoneStatus').textContent = 'Connected';
   document.getElementById('peopleZone').classList.add('featured');
   showToast('+50 XP');
   xpToday += 50;
@@ -708,7 +824,6 @@ function connectFamily() {
   document.getElementById('todayProgress').style.width = `${Math.min(95, progress)}%`;
   document.getElementById('todayMessage').textContent = 'Family link connected — the system now feels real.';
   document.getElementById('focusMessage').textContent = 'Family link connected — the system now feels real.';
-  applyZoneGain('people', 20);
   burst(document.getElementById('peopleZone'));
 }
 
@@ -778,7 +893,6 @@ function showToast(text) {
 
 updateClock();
 updateTimeDrivenPrompt();
-updateZoneProgress();
 setInterval(updateClock, 1000);
 </script>
 </body>
