@@ -202,6 +202,7 @@
   .zone-card::after { right:-20px; bottom:-22px; top:auto; }
   .mini-pill { display:inline-block; margin-top:10px; padding:6px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted-2); font-size:11px; position:relative; z-index:1; font-family:"IBM Plex Mono","Courier New",monospace; }
   .zone-card .mini-actions { display:flex; gap:8px; margin-top:12px; position:relative; z-index:1; }
+  .zone-status-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; position:relative; z-index:1; }
   .zone-card .mini-actions button { flex:1; border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; padding:10px 12px; border-radius:14px; font-size:12px; font-weight:700; cursor:pointer; }
   .zone-card.featured { background:linear-gradient(135deg, rgba(255,47,167,.14), rgba(0,212,255,.12)), rgba(255,255,255,.08); border-color:rgba(255,255,255,.18); box-shadow:0 0 0 1px rgba(255,255,255,.05) inset, 0 0 30px rgba(255,47,167,.08), var(--shadow-soft); }
 
@@ -395,31 +396,31 @@
     <div class="panel hidden" id="panel-zones">
       <div class="section-head"><h3>Life Zones</h3><span>Clearer structure</span></div>
       <div class="grid-2">
-        <div class="zone-card">
+        <div class="zone-card" id="zone-home">
           <div class="icon">🏡</div>
           <h4>Home Base</h4>
           <p>Property, bills, repairs and where things live.</p>
-          <span class="mini-pill">74% done</span>
+          <span class="mini-pill" id="zone-home-pill">74% done</span>
           <div class="mini-actions">
             <button onclick="openSheet('home')">Open checklist</button>
           </div>
         </div>
 
-        <div class="zone-card">
+        <div class="zone-card" id="zone-money">
           <div class="icon">💸</div>
           <h4>Money Mode</h4>
           <p>Accounts, payments, reminders and money basics.</p>
-          <span class="mini-pill">61% done</span>
+          <span class="mini-pill" id="zone-money-pill">61% done</span>
           <div class="mini-actions">
             <button onclick="openSheet('money')">Open checklist</button>
           </div>
         </div>
 
-        <div class="zone-card">
+        <div class="zone-card" id="zone-digital">
           <div class="icon">📱</div>
           <h4>Digital Life</h4>
           <p>Subscriptions, apps, passwords and online services.</p>
-          <span class="mini-pill">53% done</span>
+          <span class="mini-pill" id="zone-digital-pill">53% done</span>
           <div class="mini-actions">
             <button onclick="openSheet('digital')">Open checklist</button>
           </div>
@@ -429,7 +430,10 @@
           <div class="icon">🧑</div>
           <h4>People</h4>
           <p>Trusted contacts, shared access and your MySAiFe family link.</p>
-          <span class="mini-pill" id="peopleZoneStatus">Pending link</span>
+          <div class="zone-status-row">
+            <span class="mini-pill" id="zone-people-pill">46% done</span>
+            <span class="mini-pill" id="peopleZoneStatus">MySAiFe link locked</span>
+          </div>
           <div class="mini-actions">
             <button onclick="openSheet('invite')">Connect circle</button>
             <button onclick="openSheet('preview')">Preview share</button>
@@ -474,6 +478,7 @@ let streak = 6;
 let networkConnected = false;
 let onboardingSeen = false;
 const completed = { doc:false, contact:false, password:false };
+const zoneProgress = { home:74, money:61, digital:53, people:46 };
 
 const sheets = {
   onboarding: {
@@ -620,6 +625,18 @@ function setPanel(name) {
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.panel === name));
 }
 
+function updateZoneProgress() {
+  document.getElementById('zone-home-pill').textContent = `${zoneProgress.home}% done`;
+  document.getElementById('zone-money-pill').textContent = `${zoneProgress.money}% done`;
+  document.getElementById('zone-digital-pill').textContent = `${zoneProgress.digital}% done`;
+  document.getElementById('zone-people-pill').textContent = `${zoneProgress.people}% done`;
+}
+
+function applyZoneGain(zoneKey, gain) {
+  zoneProgress[zoneKey] = Math.min(100, zoneProgress[zoneKey] + gain);
+  updateZoneProgress();
+}
+
 function completeMission(key, xpGain, progressGain, message) {
   if (completed[key]) {
     showToast('Already completed');
@@ -657,6 +674,14 @@ function completeMission(key, xpGain, progressGain, message) {
     showToast(`+${xpGain} XP`);
   }
 
+  if (key === 'doc') {
+    applyZoneGain('digital', 12);
+  } else if (key === 'contact') {
+    applyZoneGain('people', 14);
+  } else if (key === 'password') {
+    applyZoneGain('digital', 18);
+  }
+
   if (Object.values(completed).every(Boolean)) {
     streak += 1;
     document.getElementById('streakText').textContent = `${streak} days`;
@@ -673,7 +698,7 @@ function connectFamily() {
   networkConnected = true;
   document.getElementById('familyBanner').querySelector('p').textContent = 'Your circle is linked. Essentials, emergency details and access rules can now flow into the shared MySAiFe network.';
   document.getElementById('familyBanner').querySelector('.xp-chip').textContent = 'Connected';
-  document.getElementById('peopleZoneStatus').textContent = 'Connected';
+  document.getElementById('peopleZoneStatus').textContent = 'MySAiFe linked';
   document.getElementById('peopleZone').classList.add('featured');
   showToast('+50 XP');
   xpToday += 50;
@@ -683,6 +708,7 @@ function connectFamily() {
   document.getElementById('todayProgress').style.width = `${Math.min(95, progress)}%`;
   document.getElementById('todayMessage').textContent = 'Family link connected — the system now feels real.';
   document.getElementById('focusMessage').textContent = 'Family link connected — the system now feels real.';
+  applyZoneGain('people', 20);
   burst(document.getElementById('peopleZone'));
 }
 
@@ -752,6 +778,7 @@ function showToast(text) {
 
 updateClock();
 updateTimeDrivenPrompt();
+updateZoneProgress();
 setInterval(updateClock, 1000);
 </script>
 </body>
