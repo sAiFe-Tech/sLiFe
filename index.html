@@ -67,24 +67,32 @@
   .hero-logo-wrap { display:flex; justify-content:center; align-items:center; margin:2px 0 2px; position:relative; }
   .hero-side-word{
     position:absolute;
-    top:50%;
-    transform:translateY(-50%);
     font-family:"Barlow Condensed", Impact, sans-serif;
-    font-size:clamp(58px, 13vw, 86px);
-    line-height:.9;
+    font-size:clamp(52px, 11.5vw, 78px);
+    line-height:.88;
     letter-spacing:.02em;
     font-weight:800;
-    color:#f7fbff;
+    color:transparent;
+    -webkit-text-stroke:1.8px rgba(255,255,255,.82);
+    text-stroke:1.8px rgba(255,255,255,.82);
     text-shadow:
       0 0 1px rgba(255,255,255,.55),
-      0 0 12px rgba(0,212,255,.18),
-      0 0 24px rgba(255,47,167,.16),
-      0 6px 18px rgba(0,0,0,.24);
+      0 0 10px rgba(0,212,255,.10),
+      0 0 20px rgba(255,47,167,.08);
+    opacity:.96;
     pointer-events:none;
     z-index:2;
   }
-  .hero-side-word.left{ left:0; }
-  .hero-side-word.right{ right:0; }
+  .hero-side-word.left{
+    left:12%;
+    top:25%;
+    transform:translate(-50%, -50%);
+  }
+  .hero-side-word.right{
+    right:12%;
+    top:60%;
+    transform:translate(50%, -50%);
+  }
   .hero-logo { width:min(72vw,295px); display:block; filter:drop-shadow(0 12px 28px rgba(255,47,167,.16)); animation:heroFloat 4.4s ease-in-out infinite; position:relative; z-index:1; }
   @keyframes heroFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
 
