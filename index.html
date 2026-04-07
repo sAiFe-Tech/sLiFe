@@ -70,7 +70,6 @@
     font-family:"Barlow Condensed", Impact, sans-serif;
     font-size:clamp(52px, 11.5vw, 78px);
     line-height:.88;
-    letter-spacing:.02em;
     font-weight:800;
     color:transparent;
     -webkit-text-stroke:1.8px rgba(255,255,255,.82);
@@ -84,14 +83,16 @@
     z-index:2;
   }
   .hero-side-word.left{
-    left:15.2%;
-    top:26.6%;
+    left:19.1%;
+    top:27.1%;
     transform:translate(-50%, -50%);
+    letter-spacing:-0.01em;
   }
   .hero-side-word.right{
-    right:10.4%;
-    top:61.4%;
+    right:15.1%;
+    top:61.8%;
     transform:translate(50%, -50%);
+    letter-spacing:0.03em;
   }
   .hero-logo { width:min(72vw,295px); display:block; filter:drop-shadow(0 12px 28px rgba(255,47,167,.16)); animation:heroFloat 4.4s ease-in-out infinite; position:relative; z-index:1; }
   @keyframes heroFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
@@ -253,7 +254,7 @@
 
   .sheet-backdrop { position:fixed; inset:0; background:rgba(5,9,26,.6); backdrop-filter:blur(4px); z-index:60; display:none; padding:18px; }
   .sheet-backdrop.open { display:flex; align-items:flex-end; justify-content:center; }
-  .sheet { width:min(100%, 430px); max-height:82vh; overflow:auto; border-radius:28px 28px 0 0; background:linear-gradient(180deg, rgba(23,29,77,.98), rgba(11,16,45,.98)); border:1px solid rgba(255,255,255,.1); box-shadow:0 -18px 48px rgba(0,0,0,.34); padding:18px 18px 24px; }
+  .sheet { width:min(100%, 430px); max-height:82vh; overflow:auto; border-radius:28px 28px 0 0; background:linear-gradient(180deg, rgba(23,29,77,.98), rgba(11,16,45,.98)); border:1px solid rgba(255,255,255,.1); box-shadow:0 -18px 48px rgba(0,0,0,.34); padding:16px 16px 20px; }
   .sheet-handle { width:54px; height:6px; border-radius:999px; background:rgba(255,255,255,.18); margin:0 auto 14px; }
   .sheet-card { padding:14px; margin-top:10px; }
   .sheet-card h3 { margin:0 0 6px; font-size:24px; line-height:.95; letter-spacing:.02em; }
@@ -286,7 +287,7 @@
       radial-gradient(circle at 15% 90%, rgba(184,255,85,.12), transparent 24%),
       linear-gradient(160deg, #f8f4ee, #efe7db 58%, #e7dccf);
     color:#1f2c2a;
-    min-height:430px;
+    min-height:380px;
   }
   .mysaife-topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
   .mysaife-brand { display:flex; flex-direction:column; gap:3px; }
@@ -322,11 +323,11 @@
     border:1px solid rgba(29,90,78,.14);
     white-space:nowrap;
   }
-  .mysaife-summary { padding:14px; margin-top:12px; }
+  .mysaife-summary { padding:12px; margin-top:10px; }
   .mysaife-list { display:grid; gap:8px; margin-top:10px; }
   .mysaife-row {
     display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
-    border-top:1px solid rgba(37,68,63,.08); padding-top:8px;
+    border-top:1px solid rgba(37,68,63,.08); padding-top:6px;
   }
   .mysaife-row:first-child { border-top:0; padding-top:0; }
   .mysaife-row strong { display:block; font-size:12px; color:#213c38; }
@@ -345,6 +346,8 @@
   @media (max-width:390px) {
     .hero-logo { width:min(82vw,300px); }
     .hero-side-word{ font-size:clamp(46px, 12vw, 72px); }
+    .hero-side-word.left{ left:17.8%; top:25.2%; }
+    .hero-side-word.right{ right:13.4%; top:60.1%; }
     .inline-stats, .grid-2 { grid-template-columns:1fr; }
     .hero-copy h1 { font-size:28px; }
     .hero-panel h2 { font-size:24px; }
@@ -501,7 +504,7 @@
           <div class="icon">🏡</div>
           <h4>Home Base</h4>
           <p>Property, bills, repairs and where things live.</p>
-          <span class="mini-pill">74% done</span>
+          <span class="mini-pill" id="homeZoneStatus">74% done</span>
           <div class="mini-actions">
             <button onclick="openSheet('home')">Open checklist</button>
           </div>
@@ -511,7 +514,7 @@
           <div class="icon">💸</div>
           <h4>Money Mode</h4>
           <p>Accounts, payments, reminders and money basics.</p>
-          <span class="mini-pill">61% done</span>
+          <span class="mini-pill" id="moneyZoneStatus">61% done</span>
           <div class="mini-actions">
             <button onclick="openSheet('money')">Open checklist</button>
           </div>
@@ -521,7 +524,7 @@
           <div class="icon">📱</div>
           <h4>Digital Life</h4>
           <p>Subscriptions, apps, passwords and online services.</p>
-          <span class="mini-pill">53% done</span>
+          <span class="mini-pill" id="digitalZoneStatus">53% done</span>
           <div class="mini-actions">
             <button onclick="openSheet('digital')">Open checklist</button>
           </div>
@@ -576,6 +579,34 @@ let streak = 6;
 let networkConnected = false;
 let onboardingSeen = false;
 const completed = { doc:false, contact:false, password:false };
+const zoneState = { home:74, money:61, digital:53, people:32 };
+
+function applyZoneGain(key) {
+  if (key === 'doc') zoneState.digital = Math.min(100, zoneState.digital + 12);
+  if (key === 'contact') zoneState.people = Math.min(100, zoneState.people + 14);
+  if (key === 'password') zoneState.digital = Math.min(100, zoneState.digital + 18);
+}
+
+function updateZoneProgress() {
+  const home = document.getElementById('homeZoneStatus');
+  const money = document.getElementById('moneyZoneStatus');
+  const digital = document.getElementById('digitalZoneStatus');
+  const people = document.getElementById('peopleZoneStatus');
+
+  if (home) home.textContent = `${zoneState.home}% done`;
+  if (money) money.textContent = `${zoneState.money}% done`;
+  if (digital) digital.textContent = `${zoneState.digital}% done`;
+
+  if (people) {
+    if (networkConnected) {
+      people.textContent = 'Connected';
+    } else if (completed.contact) {
+      people.textContent = `${zoneState.people}% ready`;
+    } else {
+      people.textContent = 'Pending link';
+    }
+  }
+}
 
 const sheets = {
   onboarding: {
@@ -794,8 +825,10 @@ function completeMission(key, xpGain, progressGain, message) {
     return;
   }
   completed[key] = true;
+  applyZoneGain(key);
   xpToday += xpGain;
   progress = Math.min(100, progress + progressGain);
+  updateZoneProgress();
   document.getElementById('xpToday').textContent = `+${xpToday}`;
   document.getElementById('progressText').textContent = `${progress}%`;
   document.getElementById('todayXP').textContent = `+${xpGain} XP`;
@@ -846,7 +879,7 @@ function connectFamily() {
   networkConnected = true;
   document.getElementById('familyBanner').querySelector('p').textContent = 'Your circle is linked. Essentials, emergency details and access rules can now flow into the shared MySAiFe network.';
   document.getElementById('familyBanner').querySelector('.xp-chip').textContent = 'Connected';
-  document.getElementById('peopleZoneStatus').textContent = 'Connected';
+  updateZoneProgress();
   document.getElementById('peopleZone').classList.add('featured');
   showToast('+50 XP');
   xpToday += 50;
@@ -925,6 +958,7 @@ function showToast(text) {
 
 updateClock();
 updateTimeDrivenPrompt();
+updateZoneProgress();
 setInterval(updateClock, 1000);
 </script>
 </body>
