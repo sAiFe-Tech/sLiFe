@@ -186,6 +186,41 @@
   .banner-link p { margin:0; color:var(--muted); font-size:13px; line-height:1.35; }
   .banner-link .actions { margin-top:12px; }
 
+  #magicMomentBanner {
+    background: linear-gradient(135deg, rgba(0,212,255,.22), rgba(255,47,167,.18)), rgba(255,255,255,.10);
+    border: 2px solid rgba(255,255,255,.30);
+    box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset, 0 0 30px rgba(0,212,255,.16), 0 0 34px rgba(255,47,167,.14), var(--shadow-soft);
+  }
+  #magicMomentBanner .eyebrow {
+    color: rgba(255,255,255,.90);
+    font-weight: 800;
+    letter-spacing: .18em;
+  }
+  #magicMomentBanner h4 {
+    font-size: 28px;
+    font-weight: 800;
+  }
+  #magicMomentBanner > p {
+    color: rgba(255,255,255,.92);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  #magicMomentBanner .simple-card {
+    background: rgba(8,16,44,.55);
+    border: 1px solid rgba(255,255,255,.18);
+  }
+  #magicMomentBanner .simple-card h4 {
+    font-size: 24px;
+  }
+  #magicMomentBanner .simple-card p {
+    color: rgba(255,255,255,.84);
+  }
+  #magicMomentBanner .meta-pill {
+    color: rgba(255,255,255,.92);
+    border-color: rgba(255,255,255,.22);
+    background: rgba(255,255,255,.08);
+  }
+
   .section-head { display:flex; justify-content:space-between; align-items:center; margin:4px 2px 10px; }
   .section-head h3 { margin:0; font-size:22px; letter-spacing:.02em; line-height:.95; }
   .section-head span { font-size:13px; color:var(--muted-2); }
@@ -408,6 +443,40 @@
         <div class="inline-stat"><div class="k">Progress</div><div class="v" id="progressText">40%</div></div>
         <div class="inline-stat"><div class="k">XP Today</div><div class="v" id="xpToday">+0</div></div>
         <div class="inline-stat"><div class="k">Streak</div><div class="v" id="streakText">6 days</div></div>
+      </div>
+    </div>
+
+
+
+    <div class="banner-link" id="magicMomentBanner">
+      <div class="banner-link-top">
+        <div>
+          <div class="eyebrow mono" style="margin:0 0 6px;">just sorted for you</div>
+          <h4>Things moved without you</h4>
+        </div>
+        <div class="xp-chip cyan mono">LIVE</div>
+      </div>
+      <p>New stuff can land, get organised and show up ready to act. That is the point where GET2IT stops being a list and starts doing the work.</p>
+      <div class="simple-grid" style="margin-top:12px;">
+        <div class="simple-card">
+          <h4>Car insurance added</h4>
+          <p>Picked up from your inbox and dropped into the right place.</p>
+          <div class="simple-meta"><span class="meta-pill">2 mins ago</span><span class="meta-pill">Connected Mail</span></div>
+        </div>
+        <div class="simple-card">
+          <h4>Renewal due soon</h4>
+          <p>Your phone cover renews in 3 days, so you can sort it before it bites.</p>
+          <div class="simple-meta"><span class="meta-pill">Heads up</span><span class="meta-pill">Action ready</span></div>
+        </div>
+        <div class="simple-card">
+          <h4>Shared to MySAiFe</h4>
+          <p>A linked record is now visible in the family side so everyone stays aligned.</p>
+          <div class="simple-meta"><span class="meta-pill">Network synced</span><span class="meta-pill">People zone</span></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="openSheet('invite')">See the link</button>
+        <button class="btn btn-secondary" onclick="setPanel('zones'); highlightPeopleZone()">Open people zone</button>
       </div>
     </div>
 
